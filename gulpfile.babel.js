@@ -14,22 +14,26 @@ import babelify from 'babelify';
 import riotify from 'riotify';
 
 const config = {
-  sourceDir: 'src',
-  scssDir: 'scss',
-  distDir: 'dist',
-  entryPoint: 'app'
+  sass: {
+    srcDir: 'src/scss/',
+    distDir: 'dist',
+    entry: 'app'
+  },
+  browserify: {
+    srcDir: 'src/js/',
+    distDir: 'dist',
+    entry: 'app'
+  }
 }
 
 gulp.task('sass', () => {
-  return gulp.src(config.sourceDir + '/**/*.scss')
+  return gulp.src(config.sass.srcDir + config.sass.entry+ '.scss')
     .pipe(sass())
-
-    //.pipe(rename(function (path) {
-    //  path.extname = '.min.css';
-    //}))
-    .pipe(concat(config.entryPoint + '.min.css'))
+    .pipe(rename(function (path) {
+      path.extname = '.min.css';
+    }))
     .pipe(cssnano({autoprefixer: {browsers: 'last 2 versions', add: true}}))
-    .pipe(gulp.dest('./' + config.distDir));
+    .pipe(gulp.dest('./' + config.sass.distDir));
 });
 
 gulp.task('browserify', () => {
@@ -39,12 +43,12 @@ gulp.task('browserify', () => {
     b.transform(riotify);
     return b.bundle();
   };
-  var entry = './' + config.sourceDir + '/' + config.entryPoint + '.js';
+  var entry = config.browserify.srcDir + config.browserify.entry + '.js';
   return browserified(entry)
-    .pipe(source(config.entryPoint + '.min.js'))
+    .pipe(source(config.browserify.entry  + '.min.js'))
     .pipe(buffer())
     .pipe(uglify())
-    .pipe(gulp.dest('./' + config.distDir));
+    .pipe(gulp.dest('./' + config.browserify.distDir));
 });
 
 gulp.task('default', ['browserify', 'sass']);
