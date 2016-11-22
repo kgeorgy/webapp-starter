@@ -1,5 +1,5 @@
 'use strict';
 import riot from 'riot';
-import appTag from '../tags/app.tag';
+import r from './router';
 
-riot.mount('*');
+riot.route.start(true);
