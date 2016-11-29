@@ -1,7 +1,7 @@
 'use strict';
-import {TagRouter} from './lib/router';
-import home from '../tags/home.tag';
-import test from '../tags/test.tag';
+import {TagRouter} from '../lib/router';
+import home from './tags/home.tag';
+import test from './tags/test.tag';
 
 let ctn1Router = new TagRouter('#ctn1');
 
