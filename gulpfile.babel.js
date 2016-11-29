@@ -12,6 +12,7 @@ import imagemin from 'gulp-imagemin';
 import htmlmin from 'gulp-htmlmin';
 import sourcemaps from 'gulp-sourcemaps';
 import gIf from 'gulp-if';
+import manifest from 'gulp-manifest';
 import browserSync from 'browser-sync';
 import transform from 'vinyl-transform';
 import source from 'vinyl-source-stream';
@@ -33,7 +34,8 @@ const SRC_STYLES_ENTRY = SRC_STYLES_DIR + 'app.scss';
 const SRC_IMAGES_DIR = SRC_ROOT_DIR + 'images/';
 const DIST_ROOT_DIR = './dist/'
 const DIST_IMAGES_DIR = DIST_ROOT_DIR + 'images/';
-const DIST_BUNDLE =  'app.min.js';
+const DIST_BUNDLE = 'app.min.js';
+const DIST_MANIFEST_FILENAME = 'app.manifest';
 
 const WEB_PORT = 9000;
 
@@ -146,13 +148,35 @@ gulp.task('watch', () => {
 
 });
 
+gulp.task('manifest', () => {
+    return gulp.src(DIST_ROOT_DIR + '**/*')
+      .pipe(manifest({
+        hash: true,
+        preferOnline: true,
+        network: ['*'],
+        filename: DIST_MANIFEST_FILENAME,
+        exclude: DIST_MANIFEST_FILENAME,
+        timestamp: true
+      }))
+      .pipe(gulp.dest('dist'));
+  });
+
 gulp.task('dev', (cb) => {
-  rs('bundle', 'serve', 'watch', cb);
+  rs('bundle', cb);
+});
+
+gulp.task('serve-dev', (cb) => {
+  rs('dev', 'serve', 'watch', cb);
 });
 
 gulp.task('dist', () => {
   dev = false;
-  rs('bundle');
+  rs('bundle', 'manifest');
 });
 
-gulp.task('default', ['dev']);
+gulp.task('serve-dist', () => {
+  dev = false;
+  rs('bundle', 'manifest', 'serve');
+});
+
+gulp.task('default', ['serve-dev']);
