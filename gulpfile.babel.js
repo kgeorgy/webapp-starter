@@ -2,6 +2,7 @@
 
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
+import closure from 'gulp-closure';
 import sass from 'gulp-sass';
 import cssnano from 'gulp-cssnano';
 import rename from 'gulp-rename';
@@ -51,7 +52,7 @@ gulp.task('browserify', () => {
 
 gulp.task('default', ['copy','html','images', 'sass','browserify']);
 
-gulp.task('watch', () => {
+gulp.task('watch',  ['copy','html','images', 'sass'], () => {
 
   watch([config.srcDir + '*'], tcopy);
   watch([config.srcDir + '*.html'], thtml);
@@ -60,9 +61,9 @@ gulp.task('watch', () => {
 
   let b = watchify(browserifyBundle());
   b.on('update', () => {
-    return tbrowserify(b);
+    tbrowserify(b);
   });
-  return tbrowserify(b);
+  tbrowserify(b);
 });
 
 function tcopy() {
@@ -115,7 +116,7 @@ function tbrowserify(b) {
     .pipe(source(config.browserify.entry  + '.min.js'))
     .pipe(buffer())
     .pipe(gIf(config.debug, sourcemaps.init({loadMaps: true})))
-    .pipe(uglify())
+    .pipe(closure())
     .pipe(gIf(config.debug, sourcemaps.write('./')))
     .pipe(gulp.dest(config.distDir + config.browserify.distDir));
 }

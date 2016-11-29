@@ -1,22 +1,24 @@
 'use strict';
-import riot from 'riot';
+import rr from 'riot-route';
+import * as r from 'riot'
 
-export class ApplicationRouter {
+export class TagRouter {
 
   constructor(appContainer) {
     this._appContainer = appContainer;
     this._lastTag = null;
+    this._routeCtx = rr.create();
   }
 
-  route(route, tag, argsTransform) {
+  route(path, tag, argsTransform) {
     if (argsTransform === undefined) {
-      argsTransform = (...args) => {return {};}; 
+      argsTransform = (...args) => {return {};};
     }
-    riot.route(route, (...args) => {
+    this._routeCtx(path, (...args) => {
       if (this._lastTag) {
         this._lastTag.unmount(true);
       }
-      this._lastTag = riot.mount(this._appContainer, tag, argsTransform(...args))[0];
+      this._lastTag = r.mount(this._appContainer, tag, argsTransform(...args))[0];
     });
   }
 

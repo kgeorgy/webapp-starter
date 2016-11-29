@@ -1,5 +1,5 @@
 'use strict';
-import riot from 'riot';
+import rr from 'riot-route'
 import r from './router';
 
-riot.route.start(true);
+rr.start(true);
