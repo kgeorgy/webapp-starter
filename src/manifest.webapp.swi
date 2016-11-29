@@ -1,0 +1,23 @@
+{
+  "name": "{{ name }}",
+  "description": "{{ description }}",
+  "icons": {
+    {% for icon in icons %}"{{ icon.size }}": "{{ icon.src }}"{% if not loop.last %},{% endif %}{% endfor %}
+  },
+  "developer": {
+    "name": "",
+    "url": ""
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "{{ name }}",
+      "description": "{{ description }}"
+    }
+  }
+}

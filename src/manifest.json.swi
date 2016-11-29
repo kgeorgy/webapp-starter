@@ -1,0 +1,25 @@
+{
+  "name": "{{ name }}",
+  "short_name": "{{ short_name }}",
+  "icons": [{% for icon in icons %}{
+        "src": "{{ icon.src }}",
+        "sizes": "{{ icon.sizes }}",
+        "type": "{{ icon.type }}"
+      },{% endfor%} {
+        "src": "{{ apple_touch_icon.src }}",
+        "sizes": "{{ apple_touch_icon.sizes }}",
+        "type": "{{ apple_touch_icon.type }}"
+      }, {
+        "src": "{{ chrome_touch_icon.src }}",
+        "sizes": "{{ chrome_touch_icon.sizes }}",
+        "type": "{{ chrome_touch_icon.type }}"
+      }, {
+        "src": "{{ ms_touch_icon.src }}",
+        "sizes": "{{ ms_touch_icon.sizes }}",
+        "type": "{{ ms_touch_icon.type }}"
+      }],
+  "start_url": "{{ start_url }}",
+  "display": "{{ display }}",
+  "background_color": "{{ background_color }}",
+  "theme_color": "{{ theme_color }}"
+}

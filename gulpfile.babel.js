@@ -13,6 +13,7 @@ import htmlmin from 'gulp-htmlmin';
 import sourcemaps from 'gulp-sourcemaps';
 import gIf from 'gulp-if';
 import manifest from 'gulp-manifest';
+import swig from 'gulp-swig';
 import browserSync from 'browser-sync';
 import transform from 'vinyl-transform';
 import source from 'vinyl-source-stream';
@@ -35,9 +36,45 @@ const SRC_IMAGES_DIR = SRC_ROOT_DIR + 'images/';
 const DIST_ROOT_DIR = './dist/'
 const DIST_IMAGES_DIR = DIST_ROOT_DIR + 'images/';
 const DIST_BUNDLE = 'app.min.js';
-const DIST_MANIFEST_FILENAME = 'app.manifest';
+const DIST_HTML_MANIFEST_FILENAME = 'app.manifest';
 
 const WEB_PORT = 9000;
+
+const MANIFEST = {
+  name: 'Web app starter',
+  short_name: 'WAS',
+  description: 'Starter kit for riot based webapp',
+  manifest_json_filename: 'manifest.json',
+  manifest_webapp_filename: 'manifest.webapp',
+  apple_touch_icon: {
+    src: 'images/icons/touch/apple-touch-icon-152x152.png',
+    size: '152',
+    sizes: '152x152',
+    type: 'image/png'
+  },
+  chrome_touch_icon: {
+    src: 'images/icons/touch/chrome-touch-icon-192x192.png',
+    size: '192',
+    sizes: '192x192',
+    type: 'image/png'
+  },
+  ms_touch_icon: {
+    src: 'images/icons/touch/ms-touch-icon-144x144.png',
+    size: '144',
+    sizes: '144x144',
+    type: 'image/png'
+  },
+  icons: [{
+    src: 'images/icons/touch/icon-128x128.png',
+    size: '128',
+    sizes: '128x128',
+    type: 'image/png'
+  }],
+  start_url: '.',
+  display: 'standalone',
+  background_color: '#0000FF',
+  theme_color: '#FFFF00'
+}
 
 let dev = true;
 let bs = browserSync.create();
@@ -53,7 +90,7 @@ gulp.task('clean', () => {
 gulp.task('root', () => {
   return gulp.src([
     SRC_ROOT_DIR + '*',
-    '!' + SRC_ROOT_DIR + '*.html',
+    '!' + SRC_ROOT_DIR + '*.swi',
     '!' + SRC_APP_DIR,
     '!' + SRC_LIB_DIR,
     '!' + SRC_TAGS_DIR,
@@ -64,10 +101,24 @@ gulp.task('root', () => {
 });
 
 gulp.task('index', () => {
-  return gulp.src(SRC_ROOT_DIR + 'index.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
+  return gulp.src(SRC_ROOT_DIR + 'index.html.swi')
+    .pipe(swig({data: MANIFEST}))
+    .pipe(rename('index.html'))
+    //.pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest(DIST_ROOT_DIR));
 });
+
+gulp.task('webapp-manifests', () => {
+  return gulp.src([
+    SRC_ROOT_DIR + MANIFEST.manifest_webapp_filename + '.swi',
+    SRC_ROOT_DIR + MANIFEST.manifest_json_filename + '.swi'
+  ])
+  .pipe(swig({data: MANIFEST}))
+  .pipe(rename((path) => {
+    path.extname = '';
+  }))
+  .pipe(gulp.dest(DIST_ROOT_DIR));
+})
 
 gulp.task('images', () => {
   return gulp.src(SRC_IMAGES_DIR + '**/*.{png,jpg,svg}')
@@ -107,7 +158,7 @@ gulp.task('browserify', () => {
 });
 
 gulp.task('bundle', (cb) => {
-  rs('clean', ['root', 'index', 'images', 'styles', 'browserify'], cb);
+  rs('clean', ['root', 'index', 'webapp-manifests', 'images', 'styles', 'browserify'], cb);
 });
 
 gulp.task('serve', () => {
@@ -148,14 +199,14 @@ gulp.task('watch', () => {
 
 });
 
-gulp.task('manifest', () => {
+gulp.task('html-manifest', () => {
     return gulp.src(DIST_ROOT_DIR + '**/*')
       .pipe(manifest({
         hash: true,
         preferOnline: true,
         network: ['*'],
-        filename: DIST_MANIFEST_FILENAME,
-        exclude: DIST_MANIFEST_FILENAME,
+        filename: DIST_HTML_MANIFEST_FILENAME,
+        exclude: DIST_HTML_MANIFEST_FILENAME,
         timestamp: true
       }))
       .pipe(gulp.dest('dist'));
@@ -176,7 +227,7 @@ gulp.task('dist', () => {
 
 gulp.task('serve-dist', () => {
   dev = false;
-  rs('bundle', 'manifest', 'serve');
+  rs('bundle', 'html-manifest', 'serve');
 });
 
 gulp.task('default', ['serve-dev']);
