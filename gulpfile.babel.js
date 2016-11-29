@@ -72,8 +72,8 @@ const MANIFEST = {
   }],
   start_url: '.',
   display: 'standalone',
-  background_color: '#0000FF',
-  theme_color: '#FFFF00'
+  background_color: '#000000',
+  theme_color: '#000000'
 }
 
 let dev = true;
@@ -192,10 +192,10 @@ gulp.task('watch-browserify',(cb) => {
 
 gulp.task('watch', () => {
 
-  gulp.watch([SRC_ROOT_DIR + 'index.html'], ['watch-index']);
+  gulp.watch([SRC_ROOT_DIR + 'index.html.swi'], ['watch-index']);
   gulp.watch([SRC_IMAGES_DIR + '**/*.{png,jpg,svg}'], ['watch-images']);
   gulp.watch([SRC_STYLES_DIR + '**/*.scss'], ['watch-styles']);
-  gulp.watch([SRC_APP_DIR + '**/*.{js, tag}', SRC_LIB_DIR + '**/*.js'], ['watch-browserify']);
+  gulp.watch([SRC_APP_DIR + '**/*.{js,tag}', SRC_LIB_DIR + '**/*.js'], ['watch-browserify']);
 
 });
 

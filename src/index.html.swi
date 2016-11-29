@@ -38,8 +38,9 @@
     <link rel="stylesheet" href="app.min.css">
   </head>
   <body>
-    <div id="ctn1"></div>
-    <div id="ctn2"></div>
+    <navbar></navbar>
+    
+    <div id="main"></div>
     <script src="app.min.js"></script>
   </body>
 </html>
