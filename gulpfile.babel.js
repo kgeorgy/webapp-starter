@@ -122,19 +122,19 @@ gulp.task('reload', () => {
 })
 
 gulp.task('watch-index', (cb) => {
-  rs(['index', 'reload'], cb);
+  rs('index', 'reload', cb);
 });
 
 gulp.task('watch-images', (cb) => {
-  rs(['images', 'reload'], cb);
+  rs('images', 'reload', cb);
 });
 
 gulp.task('watch-styles', (cb) => {
-  rs(['styles', 'reload'], cb);
+  rs('styles', 'reload', cb);
 });
 
 gulp.task('watch-browserify',(cb) => {
-  rs(['browserify', 'reload'], cb);
+  rs('browserify', 'reload', cb);
 });
 
 gulp.task('watch', () => {
