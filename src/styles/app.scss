@@ -2,3 +2,6 @@
 @import "./blaze/blaze";
 
 // ... add class overrides here ...
+body {
+  margin: $spacing-medium
+}

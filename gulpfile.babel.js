@@ -191,12 +191,10 @@ gulp.task('watch-browserify',(cb) => {
 });
 
 gulp.task('watch', () => {
-
   gulp.watch([SRC_ROOT_DIR + 'index.html.swi'], ['watch-index']);
   gulp.watch([SRC_IMAGES_DIR + '**/*.{png,jpg,svg}'], ['watch-images']);
   gulp.watch([SRC_STYLES_DIR + '**/*.scss'], ['watch-styles']);
   gulp.watch([SRC_APP_DIR + '**/*.{js,tag}', SRC_LIB_DIR + '**/*.js'], ['watch-browserify']);
-
 });
 
 gulp.task('html-manifest', () => {
